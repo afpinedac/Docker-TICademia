@@ -1,0 +1,16 @@
+FROM php:7-fpm
+
+RUN apt-get update && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev libmcrypt-dev git unzip  php-pear \
+    && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv mcrypt  \
+    && pecl install xdebug \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
+
+WORKDIR /var/www/html/ticademia
+
+COPY ./etc/php/php.ini /usr/local/etc/php/conf.d/ticademia.ini
+
+#RUN composer install --no-scripts --no-autoloader
+#RUN composer dump-autoload --optimize && \
+#	composer run-scripts post-install-cmd
+
+CMD ["php-fpm"]
